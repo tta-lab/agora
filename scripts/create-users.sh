@@ -10,6 +10,7 @@ FAILED=0
 
 for user in "${AGENTS[@]}"; do
   echo -n "Creating $user... "
+  HTTP_STATUS=0
   HTTP_BODY=$(curl -s --max-time 30 --connect-timeout 10 \
     -X POST "$BASE_URL/_matrix/client/v3/register" \
     -H "Content-Type: application/json" \
@@ -20,8 +21,7 @@ for user in "${AGENTS[@]}"; do
         \"type\": \"m.login.registration_token\",
         \"token\": \"$REG_TOKEN\"
       }
-    }")
-  HTTP_STATUS=$?
+    }") || HTTP_STATUS=$?
   if [[ $HTTP_STATUS -ne 0 ]]; then
     echo "FAILED: curl error (exit $HTTP_STATUS)"
     FAILED=1

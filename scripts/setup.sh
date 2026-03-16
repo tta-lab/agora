@@ -32,7 +32,8 @@ cd "$ROOT_DIR"
 jb install
 
 # Create secret if it doesn't exist
-if ! kubectl --context "$CTX" get secret tuwunel-secrets -n "$NAMESPACE" >/dev/null; then
+KUBECTL_ERR=$(kubectl --context "$CTX" get secret tuwunel-secrets -n "$NAMESPACE" 2>&1 >/dev/null) || true
+if echo "$KUBECTL_ERR" | grep -q "NotFound"; then
   # Create namespace first so secret can land in it
   kubectl --context "$CTX" create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
   TOKEN="${TUWUNEL_REGISTRATION_TOKEN:-$(openssl rand -hex 16)}"
@@ -41,6 +42,9 @@ if ! kubectl --context "$CTX" get secret tuwunel-secrets -n "$NAMESPACE" >/dev/n
     --from-literal=TUWUNEL_REGISTRATION_TOKEN="$TOKEN"
   echo "    Registration token: $TOKEN"
   echo "    (save this — needed for user creation)"
+elif [[ -n "$KUBECTL_ERR" ]]; then
+  echo "ERROR checking secret: $KUBECTL_ERR" >&2
+  exit 1
 else
   echo "==> Secret tuwunel-secrets already exists, skipping"
 fi
