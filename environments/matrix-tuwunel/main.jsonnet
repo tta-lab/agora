@@ -5,5 +5,6 @@ tuwunel.new(
   namespace='matrix',
   config={
     serverName: 'localhost',
+    allowRegistration: true,
   },
 )

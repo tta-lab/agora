@@ -63,8 +63,8 @@ Tuwunel is configured via environment variables set in a ConfigMap. The defaults
 | `TUWUNEL_SERVER_NAME` | `localhost` | Matrix server name (e.g. `matrix.example.com`) |
 | `TUWUNEL_DATABASE_PATH` | `/var/lib/tuwunel` | RocksDB data directory |
 | `TUWUNEL_PORT` | `8008` | HTTP port |
-| `TUWUNEL_ADDRESS` | `["0.0.0.0"]` | Listen address |
-| `TUWUNEL_ALLOW_REGISTRATION` | `true` | Open registration (token-gated) |
+| `TUWUNEL_ADDRESS` | `["0.0.0.0"]` | Listen address (overridable via `address` key in `config`) |
+| `TUWUNEL_ALLOW_REGISTRATION` | `false` | Open registration (token-gated); the live env overrides to `true` |
 | `TUWUNEL_ALLOW_FEDERATION` | `false` | Federate with other servers |
 | `TUWUNEL_ALLOW_ENCRYPTION` | `false` | E2EE (disabled for agent simplicity) |
 | `TUWUNEL_LOG` | `info` | Log level |
@@ -84,6 +84,12 @@ tuwunel.new(
 ```
 
 The `TUWUNEL_REGISTRATION_TOKEN` secret is created by `setup.sh` and stored in Kubernetes — not in git.
+
+If you lose the token from the terminal scroll, retrieve it with:
+```bash
+kubectl --context orbstack get secret tuwunel-secrets -n matrix \
+  -o jsonpath='{.data.TUWUNEL_REGISTRATION_TOKEN}' | base64 -d
+```
 
 ## Accessing Tuwunel
 

@@ -32,7 +32,7 @@ cd "$ROOT_DIR"
 jb install
 
 # Create secret if it doesn't exist
-if ! kubectl --context "$CTX" get secret tuwunel-secrets -n "$NAMESPACE" &>/dev/null; then
+if ! kubectl --context "$CTX" get secret tuwunel-secrets -n "$NAMESPACE" >/dev/null; then
   # Create namespace first so secret can land in it
   kubectl --context "$CTX" create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl --context "$CTX" apply -f -
   TOKEN="${TUWUNEL_REGISTRATION_TOKEN:-$(openssl rand -hex 16)}"
