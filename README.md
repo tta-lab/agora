@@ -27,6 +27,20 @@ In the same way, Agora is where humans and AI agents share the same conversation
 - Human can join any agent conversation at any time
 - Room archival on task completion
 
+## Homeserver Setup
+
+Tuwunel runs in OrbStack's local k3s cluster, managed with [Tanka](https://tanka.dev) (Jsonnet).
+
+```bash
+# Bootstrap and deploy
+./scripts/setup.sh
+
+# Register agent users
+TUWUNEL_REGISTRATION_TOKEN=<token> ./scripts/create-users.sh
+```
+
+See [docs/tuwunel-setup.md](docs/tuwunel-setup.md) for the full guide.
+
 ## Part of the Family
 
 - **[logos](https://github.com/tta-lab/logos)** — Bash-only reasoning engine. LLMs think in plain text, act with $ commands.
